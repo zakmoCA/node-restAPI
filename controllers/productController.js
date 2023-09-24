@@ -1,4 +1,5 @@
 import Product from '../models/productModel.js'
+import { getPostData } from '../utils.js'
 
 // Get all products
 // GET /api/products
@@ -31,17 +32,31 @@ async function getProduct(req, res, id) {
   }
 }
 
+// Create a product
+// POST /api/products
 async function createProduct(req, res) {
   try {
-    const product = {
-      title: 'Test Product',
-      description: 'This is a product',
-      price: 10
-    }
 
-    const newProduct = await Product.createNewProduct(product)
-    res.writeHead(201, { 'Content-Type': 'application/json' })
-    return res.end(JSON.stringify(newProduct))
+    let body = ''
+    req.on('data', (chunk) => {
+      body += chunk.toString()
+    })
+
+    req.on('end', async () => {
+      const { title, description, price } = JSON.parse(body)
+
+      const product = {
+        title,
+        description,
+        price
+      }
+
+      const newProduct = await Product.createNewProduct(product)
+
+      res.writeHead(201, { 'Content-Type': 'application/json' })
+      return res.end(JSON.stringify(newProduct))
+    })
+
   } catch (error) {
 
   }
