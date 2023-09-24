@@ -1,5 +1,7 @@
 import http from 'http'
-import { getProducts, getProduct, createProduct } from './controllers/productController.js'
+import { 
+  getProducts, getProduct, createProduct, deleteThisProduct, updateProduct 
+} from './controllers/productController.js'
 
 
 const server = http.createServer((req, res) => {
@@ -8,8 +10,14 @@ const server = http.createServer((req, res) => {
   } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === 'GET') {
       const id = req.url.split('/')[3]
       getProduct(req, res, id)
+  } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === 'DELETE') {
+      const id = req.url.split('/')[3]
+      deleteThisProduct(req, res, id)
   } else if (req.url === '/api/products' && req.method === 'POST') {
       createProduct(req, res)
+  } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === 'PUT') {
+      const id = req.url.split('/')[3]
+      updateProduct(req, res, id)
   } else {
       res.writeHead(404, {'Content-Type': 'application/json'})
       res.end(JSON.stringify({ message: 'Route Not Found' }))
