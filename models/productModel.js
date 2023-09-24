@@ -24,10 +24,42 @@ function createNewProduct(product) {
   })
 }
 
+function update(id, product) {
+  return new Promise((resolve, reject) => {
+    const index = products.findIndex((p) => p.id === id)
+    products[index] = {id, ...product}
+    writeDataToFile('./data/data.json', products)
+    resolve(products[index])
+  })
+}
+
+function deleteProduct(id) {
+  return new Promise((resolve, reject) => {
+    const index = products.findIndex(p => p.id === id)
+    
+    if (index === -1) {
+      return reject(new Error('Product not found'))
+    }
+    
+    const deletedProduct = products[index]
+    products.splice(index, 1);
+    
+    try {
+      writeDataToFile('./data/data.json', products)
+      resolve(deletedProduct)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+
 const Product = {
   findAll,
   findById,
-  createNewProduct
+  createNewProduct,
+  update,
+  deleteProduct
 }
 
 export default Product
