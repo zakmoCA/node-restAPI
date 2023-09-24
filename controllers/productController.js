@@ -31,4 +31,20 @@ async function getProduct(req, res, id) {
   }
 }
 
-export { getProducts, getProduct }
+async function createProduct(req, res) {
+  try {
+    const product = {
+      title: 'Test Product',
+      description: 'This is a product',
+      price: 10
+    }
+
+    const newProduct = await Product.createNewProduct(product)
+    res.writeHead(201, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify(newProduct))
+  } catch (error) {
+
+  }
+}
+
+export { getProducts, getProduct, createProduct }
