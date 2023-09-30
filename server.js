@@ -3,6 +3,22 @@ import {
   getProducts, getProduct, createProduct, deleteThisProduct, updateProduct 
 } from './controllers/productController.js'
 
+const extractIdFromUrl = url => {
+  const parts = url.split('/')
+  return parts[3]
+}
+
+const routes = {
+  '/api/products': {
+    'GET': getProducts,
+    'POST': createProduct
+  },
+  '/api/products/:id': {
+    'GET': (req, res, id) => getProduct(req, res, id),
+    'DELETE': (req, res, id) => deleteThisProduct(req, res, id),
+    'PUT': (req, res, id) => getProduct(req, res, id),
+  }
+}
 
 const server = http.createServer((req, res) => {
   if (req.url === '/api/products' && req.method === 'GET') {
